@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "384641836997",
+    "firebase_url": "https://fir-noteapp-15602-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fir-noteapp-15602",
+    "storage_bucket": "fir-noteapp-15602.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384641836997:android:b3b81573adc5edebc28dac",
+        "android_client_info": {
+          "package_name": "com.example.firebasenoteapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7C4rfFbUlmde2cTKD9TzVccKtMImijE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
