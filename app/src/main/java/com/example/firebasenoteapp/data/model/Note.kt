@@ -10,11 +10,10 @@ import kotlin.random.Random
 
 
 data class Note(
-    val title: String,
-    val content: String,
-    val timestamp: Long,
-    val color: Int,
-    val id: Int? = Random.nextInt()
+    val title: String = "",
+    val content: String = "",
+    val timestamp: Long = 0L,
+    val color: Int = 0
 ) {
     companion object {
         val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)

@@ -1,17 +1,15 @@
 package com.example.firebasenoteapp
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.firebasenoteapp.presentation.addeditnote_screen.AddEditNoteScreen
+import com.example.firebasenoteapp.presentation.note_screen.NoteScreen
 import com.example.firebasenoteapp.ui.theme.FirebaseNoteAppTheme
+import com.example.firebasenoteapp.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -21,8 +19,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FirebaseNoteAppTheme {
-                val nav = rememberNavController()
-                AddEditNoteScreen(navController = nav, noteColor = Color.BLUE)
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.NotesScreen.route
+                ) {
+                    composable(route = Screen.NotesScreen.route) {
+                        NoteScreen(navController = navController)
+                    }
+                    composable(
+                        route = Screen.AddEditNoteScreen.route
+                    ) {
+                        AddEditNoteScreen(navController = navController)
+                    }
+                }
 
             }
         }

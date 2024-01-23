@@ -1,6 +1,7 @@
 package com.example.firebasenoteapp.presentation.addeditnote_screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -34,7 +35,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
-    noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
     val titleState = viewModel.noteTitle.value
@@ -42,7 +42,7 @@ fun AddEditNoteScreen(
 
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+            Color(viewModel.noteColor.value)
         )
     }
     val scope = rememberCoroutineScope()
@@ -52,6 +52,8 @@ fun AddEditNoteScreen(
             FloatingActionButton(
                 onClick = {
                     viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    navController.navigateUp()
+                    Log.d("notes", "AddEditNoteScreen: ${AddEditNoteEvent.SaveNote}")
                 },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Save note")

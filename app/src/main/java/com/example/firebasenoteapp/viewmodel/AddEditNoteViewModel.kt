@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
-    private val firebaseRealDb: FirebaseRealDb,
-    savedStatHandle: SavedStateHandle
+    private val firebaseRealDb: FirebaseRealDb
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(
@@ -36,30 +35,6 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _noteColor = mutableStateOf(Note.noteColors.random().toArgb())
     val noteColor: State<Int> = _noteColor
-
-    private var currentNoteId: Int? = null
-
-
-    init {
-        savedStatHandle.get<Int>("noteId")?.let { noteId ->
-            if (noteId != -1) {
-                viewModelScope.launch {
-                    firebaseRealDb.getNote(noteId).also { note ->
-                        currentNoteId = note.data?.id
-                        _noteTitle.value = noteTitle.value.copy(
-                            text = note.data!!.title,
-                            isHintVisible = false
-                        )
-                        _noteContent.value = _noteContent.value.copy(
-                            text = note.data.content,
-                            isHintVisible = false
-                        )
-                        _noteColor.value = note.data.color
-                    }
-                }
-            }
-        }
-    }
 
 
     fun onEvent(event: AddEditNoteEvent) {
@@ -100,8 +75,7 @@ class AddEditNoteViewModel @Inject constructor(
                             title = noteTitle.value.text,
                             content = noteContent.value.text,
                             timestamp = System.currentTimeMillis(),
-                            color = noteColor.value,
-                            id = currentNoteId
+                            color = noteColor.value
                         )
                     )
                 }

@@ -1,13 +1,15 @@
 package com.example.firebasenoteapp.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firebasenoteapp.data.remote.FirebaseRealDb
 import com.example.firebasenoteapp.presentation.note_screen.NotesState
 import com.example.firebasenoteapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,28 +20,27 @@ class NotesViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _state = mutableStateOf(NotesState())
-    val state: State<NotesState> = _state
-
-    init {
-        getNotes()
-    }
+    private val _state = MutableStateFlow(NotesState())
+    val state: StateFlow<NotesState> = _state
 
 
-    private fun getNotes() = viewModelScope.launch {
-        firebaseDatabase.getAllNotes().let { notes ->
+     fun getNotes() {
+        viewModelScope.launch {
+            firebaseDatabase.getAllNotes().collectLatest { notes ->
+                when (notes) {
+                    is Resource.Success -> {
+                        Log.d("notes", "realnote: ${notes.data}")
+                        _state.value = NotesState(notes = notes.data ?: emptyList())
+                    }
 
-            when (notes) {
-                is Resource.Loading -> {
-                    _state.value = NotesState(isLoading = true)
-                }
+                    is Resource.Loading -> {
+                        _state.value = NotesState(isLoading = true)
+                    }
 
-                is Resource.Success -> {
-                    _state.value = NotesState(notes = notes.data ?: emptyList())
-                }
+                    is Resource.Error -> {
+                        _state.value = NotesState(error = notes.message ?: "Unknown error")
+                    }
 
-                is Resource.Error -> {
-                    _state.value = NotesState(error = notes.message ?: "Unknown error")
                 }
 
             }
